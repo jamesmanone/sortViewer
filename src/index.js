@@ -17,6 +17,10 @@ function showSort(sortType) {
       break;
     case 'merge':
       arr.mergeSort();
+      break;
+    case 'radixLSD':
+      arr.radixLSD();
+      break;
   }
 }
 
@@ -25,3 +29,4 @@ document.getElementById('bubble').addEventListener('click', () => showSort('bubb
 document.getElementById('quick').addEventListener('click', () => showSort('quick'));
 document.getElementById('cocktail').addEventListener('click', () => showSort('cocktail'));
 document.getElementById('merge').addEventListener('click', () => showSort('merge'));
+document.getElementById('radix-lsd').addEventListener('click', () => showSort('radixLSD'));

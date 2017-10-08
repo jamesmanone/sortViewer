@@ -1,9 +1,9 @@
 export default class Sortable {
   constructor(count, c) {
     this.ctx = c.getContext('2d');
-    this.arr = new Array(count);
+    this.arr = new Array();
     let i=count;
-    while(!!i--) this.arr.push(Math.floor(Math.random()*count));
+    while(!!i--) this.arr.push(Math.floor(Math.random()*count)+1);
     this.width = c.width;
     this.boardWidth = c.width;
     this.height = c.height;
@@ -22,7 +22,8 @@ export default class Sortable {
   }
 
   playSound = (a,b) => {
-    let avg = b ? (a+b)/2 : a;
+    if(!b) b=a;
+    let avg =(a+b)/2;
     let osc = this.audio.createOscillator();
     let gain = this.audio.createGain();
     gain.gain.value=1;
@@ -168,21 +169,64 @@ export default class Sortable {
           arr.splice(j+1, 2);
           j=0;
           arr.unshift([]);
-          // console.log(arr);
-          // window.clearInterval(clock);
         } else {
           arr = arr[0];
           window.clearInterval(clock);
+          this.confirmSort();
         }
       }
     }, 0);
   }
 
-  isSorted = () => {
-    let { arr } = this;
+  radixLSD = () => {
+    let { arr, playSound, drawFlat, isSortedFlat } = this;
+    let i=10, l=1;
+    while(!!i--) arr.unshift([]);
+    arr.push(arr.splice(10, arr.length-10));
+    let clock = window.setInterval(() => {
+      let test = arr[10][0].toString();
+      test = test.length>=l ? parseInt(test[test.length-l]) : 0;
+      playSound(arr[10][0]);
+      arr[test].push(arr[10].shift());
+      drawFlat();
+      if(!arr[10].length) {
+        if(arr.length>11) {
+          arr.splice(10, 1);
+        }
+        else if(isSortedFlat()) {
+          this.arr = arr.reduce((a, b) => a.concat(b), []);
+          window.clearInterval(clock);
+        }
+        else {
+          i=10;
+          ++l;
+          arr.splice(10, 1);
+          while(!!i--) arr.unshift([]);
+        }
+      }
+    }, 0);
+  }
+
+  isSorted = (arr=this.arr) => {
     let i = arr.length;
     while(!!--i) if(arr[i]<arr[i-1]) return false;
     return true;
+  }
+
+  isSortedFlat = () => {
+    let arr = this.arr.reduce((a,b)=>a.concat(b),[]);
+    return this.isSorted(arr);
+  }
+
+  confirmSort = () => {
+    let i=0;
+    const { arr, playSound, draw } = this;
+    let clock = window.setInterval(() => {
+      if(arr[i]>arr[i+1]) window.clearInterval(clock);
+      playSound(arr[i], arr[i]);
+      draw(i, i+1);
+      if(i>=arr.length-2) window.clearInterval(clock);
+    }, 10);
   }
 
   swap = (a, b) => {
