@@ -15,6 +15,8 @@ function showSort(sortType) {
     case 'cocktail':
       arr.coctailShaker();
       break;
+    case 'merge':
+      arr.mergeSort();
   }
 }
 
@@ -22,3 +24,4 @@ function showSort(sortType) {
 document.getElementById('bubble').addEventListener('click', () => showSort('bubble'));
 document.getElementById('quick').addEventListener('click', () => showSort('quick'));
 document.getElementById('cocktail').addEventListener('click', () => showSort('cocktail'));
+document.getElementById('merge').addEventListener('click', () => showSort('merge'));
