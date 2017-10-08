@@ -24,6 +24,11 @@ function showSort(sortType) {
     case 'radixMSD':
       arr.radixMSD();
       break;
+    case 'insertion':
+      arr.insertionSort();
+      break;
+    case 'selection':
+      arr.selectionSort();
   }
 }
 
@@ -34,3 +39,6 @@ document.getElementById('cocktail').addEventListener('click', () => showSort('co
 document.getElementById('merge').addEventListener('click', () => showSort('merge'));
 document.getElementById('radix-lsd').addEventListener('click', () => showSort('radixLSD'));
 document.getElementById('radix-msd').addEventListener('click', () => showSort('radixMSD'));
+document.getElementById('insertion').addEventListener('click', () => showSort('insertion'));
+document.getElementById('selection').addEventListener('click', () => showSort('selection'));
+

@@ -29,8 +29,8 @@ export default class Sortable {
     gain.gain.value=1;
     gain.connect(this.lowpass);
     osc.connect(gain);
-    osc.frequency.value = ((3000/this.max)*avg)+150;
     // debugger;
+    osc.frequency.value = ((3000/this.max)*avg)+150;
     osc.type = 'triangle';
     osc.start();
     window.setTimeout(()=>{
@@ -235,6 +235,60 @@ export default class Sortable {
       if(arr.length<11) {
         window.clearInterval(clock);
         if(l>1) arr.forEach(step => this.radixMSD(step, l-1));
+      }
+    }, 0);
+  }
+
+  insertionSort = () => {
+    let { arr, playSound, draw, swap } = this;
+    let next=2, left=0, right=1;
+    if(arr[left]>arr[right]) swap(left, right);
+    const clock = window.setInterval(() => {
+      playSound(arr[right], arr[next]);
+      draw(right, next);
+      if(left<0) {
+        arr.unshift(arr.splice(next, 1));
+        draw(left, next);
+        ++next;
+        right=next-1;
+        left=right-1;
+      } else if(arr[next]>=arr[left]&&arr[next]<=arr[right]) {
+        arr.splice(right, 0, arr.splice(next, 1));
+        draw(right, left);
+        ++next;
+        right=next-1;
+        left=right-1;
+      } else if(arr[next]>arr[right]) {
+        draw(right, next);
+        ++next;
+        right=next-1;
+        left=right-1;
+      } else {
+        --left;
+        --right;
+      }
+      if(next>=arr.length) {
+        window.clearInterval(clock);
+      }
+    }, 0);
+  }
+
+  selectionSort = () => {
+    let { arr, playSound, draw, swap } = this;
+    let sorted=0, i=0, min=0;
+    const clock = window.setInterval(() => {
+      draw(sorted+1, i);
+      playSound(arr[i]);
+      if(arr[i]<arr[min]) min=i;
+      ++i;
+      if(i>=arr.length) {
+        swap(sorted, min);
+        draw(sorted);
+        ++sorted;
+        min=i=sorted;
+      }
+      if(sorted>=arr.length) {
+        window.clearInterval(clock);
       }
     }, 0);
   }
