@@ -1,6 +1,7 @@
 export default class Sortable {
   constructor(count, c) {
     this.ctx = c.getContext('2d');
+    this.max = parseInt(count);
     this.arr = new Array();
     let i=count;
     while(!!i--) this.arr.push(Math.floor(Math.random()*count)+1);
@@ -13,7 +14,7 @@ export default class Sortable {
     this.audio = new AudioContext();
     this.lowpass = this.audio.createBiquadFilter();
     this.lowpass.type = 'lowpass';
-    this.lowpass.frequency.value = 5000;
+    this.lowpass.frequency.value = 6150;
     this.highpass = this.audio.createBiquadFilter();
     this.highpass.type = 'highpass';
     this.highpass.frequency.value = 100;
@@ -22,18 +23,19 @@ export default class Sortable {
   }
 
   playSound = (a,b) => {
-    if(!b) b=a;
-    let avg =(a+b)/2;
+    let avg = b ? (a+b)/2 : a;
     let osc = this.audio.createOscillator();
     let gain = this.audio.createGain();
     gain.gain.value=1;
     gain.connect(this.lowpass);
     osc.connect(gain);
-    osc.frequency.value = ((3000/this.arr.length)*avg)+150;
+    osc.frequency.value = ((3000/this.max)*avg)+150;
+    // debugger;
+    osc.type = 'triangle';
     osc.start();
     window.setTimeout(()=>{
       let clock = window.setInterval(()=>{
-        if(gain.gain.value > 0) gain.gain.value-=0.05;
+        if(gain.gain.value > 0.1) gain.gain.value*=0.75;
         else {
           osc.stop();
           window.clearInterval(clock);
@@ -54,8 +56,13 @@ export default class Sortable {
     });
   }
 
+  flatten = (arr=this.arr) => arr.reduce((a, b) => {
+    if(!Array.isArray(b) || !Array.isArray(b[0])) return a.concat(b);
+    else return a.concat(this.flatten(b));
+  }, []);
+
   drawFlat = () => {
-    const arr = this.arr.reduce((a, b) => a.concat(b),[]);
+    const arr = this.flatten();
     this.draw(-1, -1, arr);
   }
 
@@ -203,6 +210,31 @@ export default class Sortable {
           arr.splice(10, 1);
           while(!!i--) arr.unshift([]);
         }
+      }
+    }, 0);
+  }
+
+  radixMSD = (arr=this.arr, l) => {
+    if(l===0) {
+      arr=arr.reduce((a,b) => a.concat(b), []);
+      return arr;
+    }
+    let { playSound, drawFlat } = this;
+    let i=10;
+    while(!!i--) arr.unshift([]);
+    if(!l) l=this.max.toString().length;
+    // debugger;
+    let clock = window.setInterval(() => {
+      if(arr[10]) {
+        playSound(arr[10]);
+        let test = arr[10].toString();
+        test = test.length>=l ? parseInt(test[test.length-l]) : 0;
+        arr[test].push(arr.splice(10, 1));
+        drawFlat();
+      }
+      if(arr.length<11) {
+        window.clearInterval(clock);
+        if(l>1) arr.forEach(step => this.radixMSD(step, l-1));
       }
     }, 0);
   }
