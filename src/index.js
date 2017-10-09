@@ -1,9 +1,13 @@
 import Sortable from './Sortable';
+import Audio from './Audio';
+
+const audio = new Audio();
 
 function showSort(sortType) {
   const arr = new Sortable(
     document.getElementById('count').value,
-    document.getElementById('board')
+    document.getElementById('board'),
+    audio
   );
   switch(sortType) {
     case 'bubble':

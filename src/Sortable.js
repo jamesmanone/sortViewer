@@ -1,47 +1,22 @@
 export default class Sortable {
-  constructor(count, c) {
+  constructor(count, c, audio) {
     this.ctx = c.getContext('2d');
     this.max = parseInt(count);
-    this.arr = new Array();
-    let i=count;
-    while(!!i--) this.arr.push(Math.floor(Math.random()*count)+1);
+    this.arr = [];
+    let i=this.max;
+    while(!!i--) this.arr[i] = Math.floor(Math.random()*count)+1;
     this.width = c.width;
     this.boardWidth = c.width;
     this.height = c.height;
     this.sorted = false;
     this.draw();
-    let AudioContext = window.AudioContext || window.webkitAudioContext;
-    this.audio = new AudioContext();
-    this.lowpass = this.audio.createBiquadFilter();
-    this.lowpass.type = 'lowpass';
-    this.lowpass.frequency.value = 6150;
-    this.highpass = this.audio.createBiquadFilter();
-    this.highpass.type = 'highpass';
-    this.highpass.frequency.value = 100;
-    this.highpass.connect(this.audio.destination);
-    this.lowpass.connect(this.highpass);
+    this.audio = audio;
   }
 
   playSound = (a,b) => {
     let avg = b ? (a+b)/2 : a;
-    let osc = this.audio.createOscillator();
-    let gain = this.audio.createGain();
-    gain.gain.value=1;
-    gain.connect(this.lowpass);
-    osc.connect(gain);
-    // debugger;
-    osc.frequency.value = ((3000/this.max)*avg)+150;
-    osc.type = 'triangle';
-    osc.start();
-    window.setTimeout(()=>{
-      let clock = window.setInterval(()=>{
-        if(gain.gain.value > 0.1) gain.gain.value*=0.75;
-        else {
-          osc.stop();
-          window.clearInterval(clock);
-        }
-      }, 3);
-    }, 4);
+    let freq = ((1100/Math.pow(this.max, 2))*Math.pow(avg, 2))+150;
+    this.audio.playSound(freq);
   }
 
   draw = (a, b, arr=this.arr) => {
