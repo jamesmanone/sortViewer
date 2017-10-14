@@ -3,14 +3,16 @@
   <head>
     <meta charset="utf-8">
     <title>Sort viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <style>
       body {
+        width: 100%;
         background-color: black;
       }
     </style>
   </head>
   <body>
-    <canvas id="board" width="1100" height="750"></canvas>
+    <canvas id="board" width="100" height="100"></canvas>
     <br />
     <input type="number" name="count" id="count" value="100"/>
     <button id="bubble">Bubble Sort</button>
@@ -19,7 +21,9 @@
     <button id="selection">Selection Sort</button>
     <button id="quick">QuickSort</button>
     <button id="merge">MergeSort</button>
+    <button id="heap">HeapSort</button>
     <button id="radix-lsd">Radix LSD</button>
     <button id="radix-msd">Radix MSD</button>
+    <button id="count">Counting Sort</button>
   </body>
 </html>

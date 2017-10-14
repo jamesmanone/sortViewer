@@ -268,6 +268,53 @@ export default class Sortable {
     }, 0);
   }
 
+  heapsort = () => {
+    let { arr, draw, playSound, swap } = this;
+    let built = false, heapified=false;
+    let length=arr.length-1;
+    let i=Math.floor(arr.length/2);
+    let j=i;
+    let l=i*2+1;
+    let r=l+1;
+    let large=i;
+    const clock = window.setInterval(() => {
+      draw(l,r);
+      if(l<length&&arr[l]>arr[large]) large=l;
+      if(r<length&&arr[r]>arr[large]) large=r;
+      if(large!==j) {
+        draw(large, j);
+        playSound(arr[large], arr[j]);
+        swap(large, j);
+        j=large;
+        l=j*2+1;
+        r=l+1;
+        large=j;
+      } else if(!built) {
+        j=--i;
+        if(i<0) {
+          draw(length, 0);
+          playSound(arr[length], arr[0]);
+          swap(length, 0);
+          j=0;
+          built=true;
+        }
+        l=j*2+1;
+        r=l+1;
+        large=j;
+      } else if (length>0) {
+        swap(--length, 0);
+        playSound(length, 0);
+        draw(length, 0);
+        j=0;
+        l=j*2+1;
+        r=l+1;
+        large=j;
+      } else {
+        window.clearInterval(clock);
+      }
+    }, 0);
+  }
+
   isSorted = (arr=this.arr) => {
     let i = arr.length;
     while(!!--i) if(arr[i]<arr[i-1]) return false;

@@ -2,11 +2,15 @@ import Sortable from './Sortable';
 import Audio from './Audio';
 
 const audio = new Audio();
+const board = document.getElementById('board');
+
 
 function showSort(sortType) {
+  board.width = window.innerWidth-5;
+  board.height = window.innerHeight-30;
   const arr = new Sortable(
     document.getElementById('count').value,
-    document.getElementById('board'),
+    board,
     audio
   );
   switch(sortType) {
@@ -33,6 +37,10 @@ function showSort(sortType) {
       break;
     case 'selection':
       arr.selectionSort();
+      break;
+    case 'heap':
+      arr.heapsort();
+      break;
   }
 }
 
@@ -45,4 +53,5 @@ document.getElementById('radix-lsd').addEventListener('click', () => showSort('r
 document.getElementById('radix-msd').addEventListener('click', () => showSort('radixMSD'));
 document.getElementById('insertion').addEventListener('click', () => showSort('insertion'));
 document.getElementById('selection').addEventListener('click', () => showSort('selection'));
-
+document.getElementById('heap').addEventListener('click', () => showSort('heap'));
+document.getElementById('count').addEventListener('click', () => showSort('count'));

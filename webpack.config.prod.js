@@ -9,17 +9,17 @@ const GLOBALS = {
 
 module.exports = {
   devtool: 'none',
-  entry: path.resolve(__dirname, 'view/src/index'),
+  entry: path.resolve(__dirname, 'src/index'),
   target: 'web',
   output: {
     path: __dirname + '/dist',
     publicPath: '/',
-    filename: 'js/mobilepro.[hash].js'
+    filename: 'sortviewer.[hash].js'
   },
   plugins: [
     new webpack.DefinePlugin(GLOBALS),
     new HtmlWebpackPlugin({
-      template: 'view/src/index.html',
+      template: 'src/index.html',
       inject: true
     }),
     new webpack.optimize.UglifyJsPlugin({ uglifyOptions: { ecma: 8 } }),
