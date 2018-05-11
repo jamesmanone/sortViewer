@@ -1,9 +1,6 @@
 const SharedArrayBuffer = window.SharedArrayBuffer;
 
 import SortWorker from './worker';
-import WorkerWrapper from './WorkerWrapper';
-
-import Queue from './Queue';
 
 
 export default class Sortable {
