@@ -33,6 +33,7 @@ const bubbleSort = () => {
     for(let i=0;i<arr.length-j;++i) {
       callback[0] = i;
       callback[1] = i+1;
+      if(arr.length<5000) sleep(.000001)
       if(arr[i]>arr[i+1]) {
         swap(i, i+1);
         sorted = false;
@@ -41,8 +42,43 @@ const bubbleSort = () => {
     ++j;
   }
   self.postMessage('sorted');
-  close();
 };
+
+const coctailShaker = () => {
+  let s = 0,
+      e = arr.length - 1,
+      sorted = false;
+
+  while(!sorted && s < e) {
+    sorted = true;
+    let i = s;
+
+    for(;i<e-1;i++) {
+      callback[0] = i;
+      callback[1] = i+1;
+      // sleep(.00001);
+      if(arr[i]>arr[i+1]) {
+        sorted = false;
+        swap(i, i+1);
+      }
+    }
+
+    e--;
+
+    for(;i>s;i--) {
+      callback[0] = i-1;
+      callback[1] = i;
+      if(arr.length<5000) sleep(.00001);
+      if(arr[i]<arr[i-1]) {
+        sorted = false;
+        swap(i, i-1);
+      }
+    }
+
+    s++;
+  }
+  self.postMessage('done');
+}
 
 const qsBubble = (s, e) => {
   e++;
@@ -70,7 +106,7 @@ const quickSort = (s=0, e) => {
   while(i<e) {
     callback[0] = i;
     callback[1] = e;
-    sleep(.000001);  // slow down so I can see
+    if(arr.length<30000) sleep(.000001);  // slow down so I can see
     if(arr[i]>pivot) {
       swap(i,e-1);
       swap(e-1,e);
@@ -93,6 +129,9 @@ self.addEventListener('message', ({data}) => {
       break;
     case 'bubbleSort':
       bubbleSort();
+      break;
+    case 'coctailShaker':
+      coctailShaker();
       break;
     case 'quickSort':
       quickSort(data.s, data.e);

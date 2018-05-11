@@ -9,7 +9,7 @@ const board = document.getElementById('board');
 
 function showSort(sortType) {
   board.width = window.innerWidth-5;
-  board.height = window.innerHeight-30;
+  board.height = (window.innerHeight*0.95)-30;
   let arr;
   if(!window.SharedArrayBuffer) arr = new Sortable(
     document.getElementById('count').value,

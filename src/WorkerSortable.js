@@ -114,32 +114,37 @@ export default class Sortable {
   }
 
   coctailShaker = () => {
-    let { arr, sorted, draw, swap } = this;
-    let i=0, h=arr.length-2, l=0;
-    let rev = false;
-    sorted=true;
-    let clock = window.setInterval(() => {
-      draw(i, i+1);
-      if(arr[i]>arr[i+1]) {
-        swap(i, i+1);
-        this.playSound(arr[i], arr[i+1]);
-        sorted=false;
+    const worker = new SortWorker(),
+          sab = new SharedArrayBuffer(8),
+          ind = new Uint32Array(sab);
+
+    const animate = () => {
+      this.draw(...ind);
+      this.playSound(ind[0], ind[1]);
+      if(this.sorted == false) window.requestAnimationFrame(animate);
+    };
+
+    const start = performance.now();
+
+    worker.onmessage = ({data}) => {
+      if(data == 'done') {
+        console.log(performance.now() - start);
+        worker.terminate();
+        this.sorted = true;
       }
-      if(i>=h&&!rev) {
-        if(sorted) window.clearInterval(clock);
-        rev=true;
-        sorted=true;
-        --h;
-      }
-      if(i<=l&&rev) {
-        if(sorted) window.clearInterval(clock);
-        rev=false;
-        sorted=true;
-        ++l;
-      }
-      if(rev) --i;
-      else ++i;
-    }, 0);
+    }
+
+    worker.postMessage({
+      type: 'setup',
+      callbuffer: sab,
+      buffer: this.sab
+    });
+
+    worker.postMessage({
+      type: 'coctailShaker'
+    });
+
+    window.requestAnimationFrame(animate);
   }
 
   mergeSort = () => {
