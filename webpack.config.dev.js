@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
+
 module.exports = {
   devtool: 'inline-source-map',
   entry: [
@@ -12,11 +13,7 @@ module.exports = {
   output: {
     path: __dirname + '/dist',
     publicPath: '/',
-    filename: 'sortviewer.[hash].js'
-  },
-  devServer: {
-    contentBase: path.resolve(__dirname, 'src'),
-
+    filename: 'sortviewer.js'
   },
   plugins: [
     new webpack.NoEmitOnErrorsPlugin(),
@@ -24,6 +21,7 @@ module.exports = {
   ],
   module: {
     loaders: [
+      {test: /\.?worker\.js$/, use: 'worker-loader'},
       {test: /\.js$/, exclude: /node_modules/, loaders: ['babel-loader']},
       {test: /(\.css)$/, loaders: ['style-loader', 'css-loader']},
       {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader?name=./fonts/[hash].[ext]'},

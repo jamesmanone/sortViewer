@@ -14,7 +14,7 @@ module.exports = {
   output: {
     path: __dirname + '/dist',
     publicPath: '/',
-    filename: 'sortviewer.[hash].js'
+    filename: 'sortviewer.js'
   },
   plugins: [
     new webpack.DefinePlugin(GLOBALS),
@@ -34,6 +34,7 @@ module.exports = {
   ],
   module: {
     rules: [
+      {test: /\.?worker\.js$/, use: 'worker-loader'},
       {
         test: /\.js$/,
         include: path.join(__dirname, 'src'),

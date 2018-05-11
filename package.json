@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm-run-all --parallel lint:watch serve",
+    "start": "npm-run-all --parallel lint:watch serve build:dev",
     "lint": "esw webpack.config.* src --color",
     "lint:watch": "npm run lint -- --watch",
     "serve": "nodemon server.js --ignore 'src/'",
     "build": "NODE_ENV=production webpack --config webpack.config.prod.js",
+    "build:dev": "webpack --config webpack.config.dev.js --watch",
     "serve:prod": "NODE_ENV=production node ./server.js",
     "deployment": "npm-run-all build serve:prod"
   },
@@ -43,5 +44,8 @@
     "webpack": "^3.5.5",
     "webpack-dev-middleware": "^1.12.0",
     "webpack-hot-middleware": "^2.18.2"
+  },
+  "devDependencies": {
+    "worker-loader": "^1.1.1"
   }
 }

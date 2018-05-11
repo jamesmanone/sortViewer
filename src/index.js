@@ -1,5 +1,7 @@
 import Sortable from './Sortable';
+import WorkerSortable from './WorkerSortable';
 import Audio from './Audio';
+
 
 const audio = new Audio();
 const board = document.getElementById('board');
@@ -8,7 +10,13 @@ const board = document.getElementById('board');
 function showSort(sortType) {
   board.width = window.innerWidth-5;
   board.height = window.innerHeight-30;
-  const arr = new Sortable(
+  let arr;
+  if(!window.SharedArrayBuffer) arr = new Sortable(
+    document.getElementById('count').value,
+    board,
+    audio
+  );
+  else arr = new WorkerSortable(
     document.getElementById('count').value,
     board,
     audio
